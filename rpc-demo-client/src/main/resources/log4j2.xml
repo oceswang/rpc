@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d %p [%t] %C.%M(%L) | %m%n" />
+		</Console>
+		<RollingFile name="file" fileName="D:\logs\rpc-client.log" filePattern="D:\logs\rpc-client-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>%d %p [%t] %C.%M(%L) | %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.galaxyinternet" level="debug" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Root level="debug">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="file" />
+		</Root>
+	</Loggers>
+</Configuration>
