@@ -10,15 +10,6 @@
 	
 	<context:annotation-config></context:annotation-config>
 	<context:component-scan base-package="com.galaxy"></context:component-scan>     
-	<context:property-placeholder location="classpath:config/*.properties"/>
 	
-	<bean id="serviceRegistry" class="com.galaxy.rpc.registry.ServiceRegistry">
-		<property name="registryAddress" value="${registry.address}"></property>
-	</bean>
-	
-	<bean id="rpcServer" class="com.galaxy.rpc.server.RpcServer">
-		<property name="serverAddress" value="${server.address}"></property>
-		<property name="serviceRegistry" ref="serviceRegistry"></property>
-	</bean>
-		   
+	<bean class="com.galaxy.rpc.server.RpcServerInitializer"/>
 </beans>		   

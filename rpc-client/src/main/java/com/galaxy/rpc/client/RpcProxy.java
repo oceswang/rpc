@@ -3,21 +3,29 @@ package com.galaxy.rpc.client;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Properties;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.galaxy.rpc.common.bean.RpcRequest;
 import com.galaxy.rpc.common.bean.RpcResponse;
+import com.galaxy.rpc.common.util.ConfigUtil;
 import com.galaxy.rpc.registry.ServiceDiscovery;
-@Component
+import com.galaxy.rpc.registry.ServiceDiscoveryFactory;
 public class RpcProxy
 {
-	@Autowired
 	private ServiceDiscovery serviceDiscovery;
 	private String registryAddress;
-	
+	public RpcProxy()
+	{
+		Properties config = ConfigUtil.getClasspathProp("rpc.properties");
+		registryAddress = config.getProperty("registry.address");
+		String serverAddress = config.getProperty("server.address");
+		String protocol = config.getProperty("registry.protocol");
+		if(registryAddress != null && serverAddress != null && protocol != null)
+		{
+			serviceDiscovery = ServiceDiscoveryFactory.create(protocol, registryAddress);
+		}
+	}
 	@SuppressWarnings("unchecked")
 	public <T> T create(Class<?> interfaceClass)
 	{

@@ -13,14 +13,20 @@ public class DemoClient
 	@SuppressWarnings("resource")
 	public static void main(String[] args)
 	{
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/spring.xml");
-		RpcProxy proxy = ctx.getBean(RpcProxy.class);
+		//普通方式
+	/*	
+		RpcProxy proxy = new RpcProxy();
 		DemoService service = proxy.create(DemoService.class);
 		service.hello("param1");
 		User user = new User();
 		user.setName("uname");
 		user.setAge(20);
 		service.hello(user);
+		*/
+		//spring方式
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/spring.xml");
+		DemoBean bean = ctx.getBean(DemoBean.class);
+		bean.call();
 
 	}
 

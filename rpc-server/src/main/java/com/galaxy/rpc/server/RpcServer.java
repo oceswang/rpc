@@ -2,17 +2,17 @@ package com.galaxy.rpc.server;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import java.util.Properties;
 
 import com.galaxy.rpc.common.bean.RpcRequest;
 import com.galaxy.rpc.common.bean.RpcResponse;
 import com.galaxy.rpc.common.codec.RpcDecoder;
 import com.galaxy.rpc.common.codec.RpcEncoder;
+import com.galaxy.rpc.common.util.ClassFilter;
+import com.galaxy.rpc.common.util.ClassUtil;
+import com.galaxy.rpc.common.util.ConfigUtil;
 import com.galaxy.rpc.registry.ServiceRegistry;
+import com.galaxy.rpc.registry.ServiceRegistryFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -23,16 +23,38 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class RpcServer implements ApplicationContextAware, InitializingBean
+public class RpcServer
 {
 
 	private Map<String,Object> handlerMap = new HashMap<>();
 	private String serverAddress;
 	private ServiceRegistry serviceRegistry;
+	private String servicePkg;
 	
-	@Override
-	public void afterPropertiesSet() throws Exception
+	public RpcServer()
 	{
+		Properties config = ConfigUtil.getClasspathProp("rpc.properties");
+		serverAddress = config.getProperty("server.address");
+		String protocol = config.getProperty("registry.protocol");
+		String registryAddress = config.getProperty("registry.address");
+		if(serverAddress != null && protocol != null && registryAddress != null)
+		{
+			serviceRegistry = ServiceRegistryFactory.create(protocol, registryAddress);
+		}
+		if(serviceRegistry == null)
+		{
+			throw new RuntimeException("ServiceRegistry can not be initialized. protocol="+protocol+", serverAddress="+serverAddress);
+		}
+		servicePkg = config.getProperty("service.packages");
+		if(!RpcServerInitializer.isUseSpring())
+		{
+			scanCommonService(servicePkg.split(","));
+		}
+	}
+	
+	public void startRpcServer()
+	{
+		
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try
@@ -74,17 +96,42 @@ public class RpcServer implements ApplicationContextAware, InitializingBean
 		}
 	}
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+	public void scanCommonService(String... servicePackages) 
 	{
-		Map<String,Object> beanMap = applicationContext.getBeansWithAnnotation(RpcService.class);
-		if(beanMap != null && beanMap.size() > 0)
+		for(String pkg : servicePackages)
 		{
-			for(Object bean : beanMap.values())
+			if(pkg == null || pkg.length()==0)
 			{
-				String name = bean.getClass().getAnnotation(RpcService.class).value().getName();
-				handlerMap.put(name, bean);
+				break;
 			}
+			ClassUtil.scan(pkg, new ClassFilter(){
+				@Override
+				public boolean accept(Class<?> clazz)
+				{
+					RpcService service = clazz.getAnnotation(RpcService.class);
+					if(service != null)
+					{
+						Object bean = null;
+						String name = service.value().getName();
+						if(bean == null)
+						{
+							try
+							{
+								bean = clazz.newInstance();
+							} catch (Exception e)
+							{
+								e.printStackTrace();
+							}
+						}
+						if(bean != null)
+						{
+							handlerMap.put(name, bean);
+							return true;
+						}
+					}
+					return false;
+				}
+			});
 		}
 	}
 
@@ -108,5 +155,19 @@ public class RpcServer implements ApplicationContextAware, InitializingBean
 		this.serviceRegistry = serviceRegistry;
 	}
 
-	
+	public Map<String, Object> getHandlerMap()
+	{
+		return handlerMap;
+	}
+
+	public void setHandlerMap(Map<String, Object> handlerMap)
+	{
+		this.handlerMap = handlerMap;
+	}
+
+	public String getServicePkg()
+	{
+		return servicePkg;
+	}
+
 }

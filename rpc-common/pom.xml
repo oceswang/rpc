@@ -8,5 +8,13 @@
 	</parent>
 	<artifactId>rpc-common</artifactId>
 	<name>rpc-common</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+	</dependencies>
 
 </project>
