@@ -10,7 +10,7 @@ import com.galaxy.rpc.common.bean.RpcRequest;
 import com.galaxy.rpc.common.bean.RpcResponse;
 import com.galaxy.rpc.common.util.ConfigUtil;
 import com.galaxy.rpc.registry.ServiceDiscovery;
-import com.galaxy.rpc.registry.ServiceDiscoveryFactory;
+import com.galaxy.rpc.registry.factory.ServiceDiscoveryFactory;
 public class RpcProxy
 {
 	private ServiceDiscovery serviceDiscovery;

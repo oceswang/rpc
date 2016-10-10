@@ -1,6 +1,7 @@
-package com.galaxy.rpc.registry;
+package com.galaxy.rpc.registry.factory;
 
 import com.galaxy.rpc.common.util.Constants;
+import com.galaxy.rpc.registry.ServiceRegistry;
 import com.galaxy.rpc.registry.zookeeper.ZooKeeperServiceRegistry;
 
 public class ServiceRegistryFactory

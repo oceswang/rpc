@@ -12,7 +12,7 @@ import com.galaxy.rpc.common.util.ClassFilter;
 import com.galaxy.rpc.common.util.ClassUtil;
 import com.galaxy.rpc.common.util.ConfigUtil;
 import com.galaxy.rpc.registry.ServiceRegistry;
-import com.galaxy.rpc.registry.ServiceRegistryFactory;
+import com.galaxy.rpc.registry.factory.ServiceRegistryFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
