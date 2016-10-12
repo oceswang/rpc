@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.galaxy</groupId>
-			<artifactId>rpc-common</artifactId>
+			<artifactId>rpc-remoting</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

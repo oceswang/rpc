@@ -139,5 +139,6 @@
 		<module>rpc-demo-api</module>
 		<module>rpc-demo-server</module>
 		<module>rpc-demo-client</module>
-	</modules>
+    <module>rpc-remoting</module>
+  </modules>
 </project>

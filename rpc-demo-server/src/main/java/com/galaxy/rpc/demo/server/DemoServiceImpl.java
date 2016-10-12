@@ -17,14 +17,22 @@ public class DemoServiceImpl implements DemoService
 	@Override
 	public String hello(String param)
 	{
-		System.out.println("call hello, param "+param);
+		System.err.println("call hello, param "+param);
+		try
+		{
+			Thread.sleep(3000);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "return "+param;
 	}
 
 	@Override
 	public String hello(User user)
 	{
-		System.out.println("call hello, param "+user);
+		System.err.println("call hello, param "+user);
 		return "return "+user.toString();
 	}
 

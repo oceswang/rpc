@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface RpcService
 {
 	public Class<?> value();
+	public String version() default "1.0";
+	public long timeout() default 1000L;
 }

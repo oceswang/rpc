@@ -7,4 +7,7 @@ public class Constants
 	public static final String ZK_DATA_PATH = ZK_REGISTRY_PATH+"/data";
 	public static final String PROTOCOL_ZK = "zookeeper";
 	public static final String PROTOCOL_REDIS = "redis";
+	
+	public static final String CATEGORY_PROVIDERS="providers";
+	public static final String CATEGORY_CONSUMERS="consumers";
 }

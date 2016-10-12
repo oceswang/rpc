@@ -30,6 +30,7 @@ public class RpcServer
 	private String serverAddress;
 	private ServiceRegistry serviceRegistry;
 	private String servicePkg;
+	private long timeout = 1000L;
 	
 	public RpcServer()
 	{
@@ -37,6 +38,11 @@ public class RpcServer
 		serverAddress = config.getProperty("server.address");
 		String protocol = config.getProperty("registry.protocol");
 		String registryAddress = config.getProperty("registry.address");
+		String timeoutStr = config.getProperty("server.timeout");
+		if(timeoutStr != null)
+		{
+			timeout = Long.valueOf(timeoutStr);
+		}
 		if(serverAddress != null && protocol != null && registryAddress != null)
 		{
 			serviceRegistry = ServiceRegistryFactory.create(protocol, registryAddress);
@@ -69,7 +75,7 @@ public class RpcServer
 					ch.pipeline()
 					.addLast(new RpcDecoder(RpcRequest.class))
 					.addLast(new RpcEncoder(RpcResponse.class))
-					.addLast(new RpcServerHandler(handlerMap));
+					.addLast(new RpcServerHandler(handlerMap,timeout));
 				}
 			})
 			.option(ChannelOption.SO_BACKLOG, 128)
