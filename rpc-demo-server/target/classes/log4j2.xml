@@ -14,7 +14,7 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="com.galaxyinternet" level="debug" additivity="false">
+		<Logger name="com.galaxy" level="debug" additivity="false">
 			<AppenderRef ref="file" />
 		</Logger>
 		<Root level="debug">
